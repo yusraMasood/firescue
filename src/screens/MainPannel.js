@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Pressable,Image,TouchableOpacity } from 'react-native';
 
 export default function MainPannel(props) {
-const { onPress, title = 'Admin' ,title2='User',title3='Authority'} = props;
+const { onPress, title = 'Admin' ,title2='User'} = props;
 return (
 <View style={styles.container}>
     <Image
@@ -10,14 +10,11 @@ return (
     source={require("../../assets/firescue_logo.png")}
     />
     <Text title="Pannel" style={styles.textStyle}>Main Panel</Text>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate('Admin_login')}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate('AdminDashboard')}>
     <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate('User_login')}>
     <Text style={styles.text}>{title2}</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate('Authority_login')}>
-    <Text style={styles.text}>{title3}</Text>
     </TouchableOpacity>
 </View>
 )

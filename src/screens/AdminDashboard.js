@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Pressable,Image,TouchableOpacity } from 'react-native';
 
 export default function AdminDashboard(props) {
-const { onPress, title1 = 'Confirm Incident' ,title2='Manage Users',title3='Logout'} = props;
+const { onPress, title1 = 'Dispatch Teams' ,title2='Manage Teams',title3='Logout'} = props;
 return (
 <View style={styles.container}>
     <Image
@@ -10,10 +10,10 @@ return (
     source={require("../../assets/firescue_logo.png")}
     />
     <Text title="Pannel" style={styles.textStyle}>Admin Dashboard</Text>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Confirm_Incident")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Dispatch_Team")}>
     <Text style={styles.text}>{title1}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Manage_Users")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Manage_Teams")}>
     <Text style={styles.text}>{title2}</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("MainPannel")}>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom:250,
+        paddingBottom:150
     },
 button: {
     alignItems: 'center',

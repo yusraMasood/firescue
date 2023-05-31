@@ -1,157 +1,117 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  TouchableHighlight,
-  Modal,
-  Alert
-} from "react-native";
+import {View,Text, TouchableOpacity,TextInput,StyleSheet,Alert} from 'react-native'
+import React, {useRef,useState} from 'react'
+import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
+import firebase from 'firebase/compat/app';
+// import {firebaseConfig} from '../../Config';
 
-export default function Admin_login({navigation}) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+const Admin_login=()=>{
+    const [PhoneNumber, setPhoneNumber]= useState('');
+    const [Code,setCode]= useState('');
+    const [VerificationId,setVerificationId]= useState(null);
+    const recaptchaVerifier= useRef(null);
 
-  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const passwordRegex =  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+    const SendVerification= ()=>{
+        const PhoneProvider= new firebase.auth.PhoneAuthProvider();
+        PhoneProvider
+        .verifyPhoneNumber(PhoneNumber,recaptchaVerifier.current)
+        .then(setVerificationId);
+        setPhoneNumber('');
+    };
 
-  const validate = () => {
-    if (!emailRegex.test(email)) {
-    Alert.alert('OOPS!','Invalid Email',[
-      {text:'Cancel',onPress: () => console.log('alert closed')}
-    ]);
-    setShowAlert(true);
-    } else if (!passwordRegex.test(password)) {
-      Alert.alert('OOPS!','Password must be at least 8 characters long and contain at least one letter and one number',[
-        {text:'Cancel',onPress:()=>console.log('alert closed')}
-      ]);
-    } else {
-    navigation.navigate("AdminDashboard");
-    }
-};
+    const ConfirmCode=()=>{
+        const credential = firebase.auth.PhoneAuthProvider.credential(
+            VerificationId,
+            Code
+        );
+        firebase.auth().signInWithCredential(credential)
+        .then(()=>{
+            setCode('');
+        })
+        .catch((error)=>{
+            //show an alert in case of error
+            alert(error);
+        })
+        Alert.alert(
+            'Login Successful, Welcome to Dashboard',
+        );
+    };
 
-
-  return (
-    <View style={styles.container}>
-      <Image style={styles.imageStyle} source={require("../../assets/firescue_logo.png")} /> 
-      <Text title="Pannel" style={styles.textStyle}>Admin Login</Text>
-      <StatusBar style="auto" />
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
-        /> 
-      </View> 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        /> 
-      </View> 
-      <TouchableOpacity>
-        <Text style={styles.register_button} onPress={()=>navigation.navigate("Register_Admin")}>Create Account/Register</Text> 
-      </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn} onPress={validate}>
-        <Text style={styles.loginText}>LOGIN</Text> 
-      </TouchableOpacity> 
-    </View> 
-  );
+    return(
+        <View style={styles.container}>
+            {/* <FirebaseRecaptchaVerifierModal 
+                ref={recaptchaVerifier}
+                // firebaseConfig={firebaseConfig}
+            /> */}
+            <Text style={styles.otpText}>
+                Login using OTP
+            </Text>
+            <TextInput 
+                placeholder='Phone Number with country code'
+                onChangeText={setPhoneNumber}
+                keyboardType='phone-pad'
+                autoCompleteType='tel'
+                style={styles.textInput}
+            />
+            <TouchableOpacity style={styles.sendVerification} onPress={SendVerification}>
+                <Text style={styles.buttonText}>
+                    Send Verification
+                </Text>
+            </TouchableOpacity>
+            <TextInput 
+                placeholder='Confirm Code'
+                onChangeText={setCode}
+                keyboardType='number-pad'
+                autoCompleteType='tel'
+                style={styles.textInput}
+            />
+            <TouchableOpacity style={styles.sendCode} onPress={ConfirmCode}>
+                <Text style={styles.buttonText}>
+                    Confirm Verification
+                </Text>
+            </TouchableOpacity>
+        </View>
+    )
 }
 
-const InputLength=240;
+export default Admin_login;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingBottom:100,
-},
-image: {
-    marginTop: 5,
-},
-inputView: {
-    backgroundColor: "white",
-        borderRadius: 100,
-        borderColor: 'black',
-        borderWidth:1,
-        width: InputLength,
-        height: 45,
-        marginBottom: 15,
-        alignItems: "center",
-        flexDirection:'row',
-        paddingHorizontal: 100,
-},
-TextInput: {
-    height: 50,
+const styles= StyleSheet.create({
+    container:{
         flex:1,
-       // paddingright: 20,
-        marginleft: 0,
-       // padding:10,
-        width:500,
-        marginLeft:-90,
-        textAlign:'left',
-        flexDirection: 'row',
-       // display: 'flex',
-},
-register_button: {
-    height: 30,
-    marginBottom: 30,
-},
-loginBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    borderRadius: 100,
-    elevation: 3,
-    backgroundColor: 'red',
-    marginBottom: 20,
-    padding: 30,
-    marginTop:0,
-    marginBottom: 80,
-},
-imageStyle:{
-    width:200,
-    height:200,
-    marginBottom:0,
-    marginTop: 0,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-},
-textStyle: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginBottom: 5,
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingBottom:20,
-    position: 'relative',
-    paddingTop: 0,
+        backgroundColor:"#000",
+        alignItems:'center',
+        justifyContent:'center',   
     },
-page:{
-    marginBottom: 70,
-},
-loginText:{
-    color:'white',
-},
-error: {
-  fontSize: 16,
-  color: 'red',
-  marginTop: 10,
-},
-});
+    textInput:{
+        paddingTop:40,
+        paddingBottom:20,
+        paddingHorizontal:20,
+        fontSize:24,
+        borderBottomColor:'#fff',
+        borderBottomWidth:2,
+        marginBottom:20,
+        textAlign:'center',
+        color:'#fff'
+    },
+    sendVerification:{
+        padding:20,
+        backgroundColor:"#3498db",
+        borderRadius:10
+    },
+    sendCode:{
+        padding:20,
+        backgroundColor:'9b59b6',
+        borderRadius:10,
+    },
+    buttonText:{
+        textAlign:'center',
+        color:'#fff',
+        fontWeight:'bold',
+    },
+    otpText:{
+        fontsize:24,
+        fontWeight:'bold',
+        color:'#fff',
+        margin:20,
+    }
+})

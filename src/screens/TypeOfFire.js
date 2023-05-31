@@ -10,19 +10,19 @@ return (
     source={require("../../assets/firescue_logo.png")}
     />
     <Text title="Pannel" style={styles.textStyle}>Type of Fire</Text>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("UserDashboard")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title1}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("UserDashboard")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title2}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("UserDashboard")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title3}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("UserDashboard")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title4}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("UserDashboard")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title5}</Text>
     </TouchableOpacity>
 </View>

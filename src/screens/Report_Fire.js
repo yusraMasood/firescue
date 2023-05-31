@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button,StyleSheet,Image,StatusBar,TouchableOpacity } from 'react-native';
+import MapWindow from './new_page';
 
 export default function Report_Fire(){
     const[Description,setDescription]= useState('');
 
 
 return(
-    <View style={styles.container}>
+    <View style={styles.container_whole}>
         <Text title="report" style={styles.report_fire}>REPORT FIRE</Text>
         <Text title="subheading" style={styles.subheading}>My Current Location</Text>
-        <Image style={styles.imageStyle} source={require("../../assets/location.jpg")} /> 
+        <View style={styles.container}>
+        <MapWindow style={styles.map} />
+    </View>
         <Text title="text" style={styles.description_text}>Describe the Incidence</Text>
     <View style={styles.inputView}>
         <TextInput
@@ -29,15 +32,15 @@ return(
 
 );
 }
-const InputLength= 260;
+const InputLength= 230;
 
 const styles =StyleSheet.create({
-    container: {
+    container_whole: {
         flex: 1,
         backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
-        paddingTop: 50,
+        paddingTop: 30,
     },
     report_fire: {
         marginLeft: 'auto',
@@ -51,11 +54,13 @@ const styles =StyleSheet.create({
         paddingTop: 0,
         },
     subheading:{
-        height: 30
+        height: 30,
+        marginBottom:0,
+        marginTop: 15,
     },
     description_text:{
         height: 30,
-        marginTop:15,
+        marginTop:30,
     },
     TextInput: {
         height: 50,
@@ -63,11 +68,11 @@ const styles =StyleSheet.create({
         paddingright: 0,
         marginleft: 0,
         padding:0,
-        marginLeft:-90,
+        marginLeft:-80,
         textAlign:'left',
         flexDirection: 'row',
         display: 'flex',
-        marginBottom:100,
+        marginBottom:90,
     },
     inputView: {
         backgroundColor: "white",
@@ -106,5 +111,16 @@ const styles =StyleSheet.create({
     Button_Text:{
         color:'white',
         },
+        container: {
+        width:200,
+        height:200,
+        marginBottom:0,
+        marginTop: 0,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+          },
+          map: {
+            flex: 1,
+          },
 })
 

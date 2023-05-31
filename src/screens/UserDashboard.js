@@ -10,14 +10,11 @@ return (
     source={require("../../assets/firescue_logo.png")}
     />
     <Text title="Pannel" style={styles.textStyle}>User Dashboard</Text>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location")}>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Location_User")}>
     <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Report_Fire")}>
     <Text style={styles.text}>{title1}</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Update_Profile")}>
-    <Text style={styles.text}>{title2}</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("MainPannel")}>
     <Text style={styles.text}>{title3}</Text>

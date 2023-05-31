@@ -13,8 +13,8 @@ return (
     <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Add_Teams")}>
     <Text style={styles.text}>{title1}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Delete_Teams")}>
-    <Text style={styles.text}>{title2}</Text>
+    <TouchableOpacity style={styles.button} onPress={()=>props.navigation.navigate("Show_Teams")}>
+    <Text style={styles.text}>Show Teams</Text>
     </TouchableOpacity>
 
 </View>

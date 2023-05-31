@@ -1,65 +1,84 @@
-import * as React from 'react';
+import React from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, View ,Text} from 'react-native';
-import { Marker ,Callout,Circle} from 'react-native-maps';
-import * as Location from 'expo-location';
+import { StyleSheet, View, Text ,TouchableOpacity} from 'react-native';
+import { Marker, Callout, Circle } from 'react-native-maps';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { useState } from 'react';
 
-export default function App() {
+export default function App(props) {
+const [pin, setPin] = React.useState({
+    latitude: 24.860966,
+    longitude: 66.990501,
+});
 
-    const[pin,setPin]= React.useState({
-        latitude: 13.406,
-        longitude: 123.3753,
-    });
+const [mapLocation, setMapLocation] = useState(null);
 
-    React.useEffect(() => {
-        (async () => {
-        
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            console.log('Permission to access location was denied');
-            return;
-        }
-    
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location);
+const onRegionChange = (region) => {
+setMapLocation(region);
+};
 
-        setPin({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            });
-        })();
-    }, []);
 return (
-    <View style={styles.container}>
-    <MapView style={styles.map}
-    initialRegion={{
-        latitude: 13.406,
-        longitude: 123.3753,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.0005,
-    }}
-    showsUserLocation={true}
-    onUserLocationChange={(e)=>{
-        console.log("onUserLocationChange",e.nativeEvent.coordinate);
-    }}
+    <View>
+    <GooglePlacesAutocomplete
+        placeholder="Search"
+        fetchDetails={true}
+        GooglePlacesSearchQuery={{
+        rankby: "distance"
+        }}
+        onPress={(data, details = null) => {
+        console.log(data, details);
+        setPin({
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+        });
+        }}
+        query={{
+        key: 'AIzaSyC7Z4mzbawELQdpzejppo-LEIgq1NchUgc',
+        language: 'en',
+        components: "country:pk",
+        types: ['(address)'],
+        radius: 100000,
+        location: `${pin.latitude},${pin.longitude}`,
+        }}
+        defaultValue='Karachi'
+    />
+    <MapView
+        style={styles.map}
+        initialRegion={{
+        latitude: pin.latitude,
+        longitude: pin.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+        }}
+        provider="google"
+        region={{
+        latitude: pin.latitude,
+        longitude: pin.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+        }}
     >
-        <Marker 
+        <Marker coordinate={{ latitude: pin.latitude, longitude: pin.longitude }} />
+        <Marker
         coordinate={pin}
         draggable={true}
-        onDragStart={(e)=>{
-            console.log("Drag Start",e.nativeEvent.coordinate);
+        onDragStart={(e) => {
+            console.log("Drag start", e.nativeEvent.coordinate);
         }}
-        onDragEnd={(e)=>{
-            console.log("Drag End",e.nativeEvent.coordinate);
+        onDragEnd={(e) => {
+            setPin({
+            latitude: e.nativeEvent.coordinate.latitude,
+            longitude: e.nativeEvent.coordinate.longitude,
+            });
         }}
         >
-            
-            <Callout>
-                <Text>This is Callout</Text>
-            </Callout>
+        <Callout>
+            <Text>I am here</Text>
+        </Callout>
         </Marker>
-        <Circle center={pin} radius={100}/>
+        <Circle center={pin} radius={1000} />
     </MapView>
+
     </View>
 );
 }
