@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import MainPannel from "./src/screens/MainPannel";
@@ -22,9 +23,17 @@ import Location_User from "./src/screens/Location_User";
 import new_page from "./src/screens/new_page";
 import Show_Teams from "./src/screens/Show_Teams";
 import Update_Teams from "./src/screens/Update_Teams";
+// import messaging from "@react-native-firebase/messaging";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  // useEffect(() => {
+  //   if (Platform.OS === "android") {
+  //     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  //       console.log("Message handled in the background!", remoteMessage);
+  //     });
+  //   }
+  // }, []);
 
   return (
     <NavigationContainer>

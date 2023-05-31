@@ -6,20 +6,22 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import messaging from "@react-native-firebase/messaging";
 
 // const teams = [{ team: "Team A" }, { team: "Team B" }, { team: "Team C" }];
 import MapWindow from "./new_page";
 import { db } from "../../Config";
 import { vh } from "../Utils/dimensions";
+import MapView from "react-native-maps";
 
 const Dispatch_Team = (props) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedValue, setSelectedValue] = React.useState("");
   const [selectedTeam, setSelectedTeam] = React.useState("Select Team");
   const [isClicked, setIsClicked] = React.useState(false);
   const [data, setData] = useState(teams);
@@ -31,6 +33,7 @@ const Dispatch_Team = (props) => {
   };
   const getTeams = async () => {
     setLoading(true);
+
     const querySnapshot = await getDocs(collection(db, "users"));
     const tempArray = [];
     querySnapshot.forEach((doc) => {
@@ -41,6 +44,9 @@ const Dispatch_Team = (props) => {
         desc: doc.data(),
       });
     });
+    if (tempArray?.length > 0) {
+      setSelectedTeam(tempArray[0]);
+    }
     setTeams(tempArray);
     setLoading(false);
   };
@@ -51,6 +57,7 @@ const Dispatch_Team = (props) => {
     });
     return unsubscribe;
   }, []);
+
   return (
     <View style={styles.container_whole}>
       <Text title="dispatch_team" style={styles.Dispatch_Team}>
@@ -68,7 +75,7 @@ const Dispatch_Team = (props) => {
             setIsClicked(!isClicked);
           }}
         >
-          <Text style={styles.dropdowntext}>{selectedTeam}</Text>
+          <Text style={styles.dropdowntext}>{selectedTeam?.desc?.name}</Text>
           {isClicked ? (
             <Image
               style={styles.icon_down}
@@ -93,23 +100,27 @@ const Dispatch_Team = (props) => {
                 onSearch(txt);
               }}
             />
-            <FlatList
-              data={teams}
-              renderItem={({ item, index }) => {
-                console.log("items", item);
-                return (
-                  <TouchableOpacity
-                    style={styles.teamlist}
-                    onPress={() => {
-                      setSelectedTeam(item.team);
-                      setIsClicked(false);
-                    }}
-                  >
-                    <Text>{item?.desc?.name}</Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
+            {loading ? (
+              <ActivityIndicator size={20} color={"red"} />
+            ) : (
+              <FlatList
+                data={teams}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.teamlist}
+                      onPress={() => {
+                        setSelectedTeam(item);
+                        setIsClicked(false);
+                        // animate;
+                      }}
+                    >
+                      <Text>{item?.desc?.name}</Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            )}
           </View>
         ) : null}
       </View>
@@ -121,7 +132,29 @@ const Dispatch_Team = (props) => {
         </View>
         <View style={{ flex: 1, padding: 18 }}>
           <View style={styles.container}>
-            <MapWindow style={styles.map} />
+            {selectedTeam?.desc?.location && (
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+                provider="google"
+                region={{
+                  latitude: selectedTeam?.desc?.location?.latitude,
+                  longitude: selectedTeam?.desc?.location?.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              ></MapView>
+            )}
+
+            {/* <MapWindow
+              location={selectedTeam?.desc?.location}
+              style={styles.map}
+            /> */}
           </View>
         </View>
       </View>
