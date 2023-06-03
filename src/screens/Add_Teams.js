@@ -13,8 +13,6 @@ import {
 } from "react-native";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../Config";
-import { showToast } from "../Utils/HelperFunction";
-import { vh, vw } from "../Utils/dimensions";
 import GooglePlace from "../components/GooglePlace";
 
 export default function Add_Teams(props) {
@@ -38,7 +36,7 @@ export default function Add_Teams(props) {
 
     try {
       setLoading(true);
-      const docRef = await addDoc(collection(db, "users"), {
+      await addDoc(collection(db, "users"), {
         name: teamLeader,
         location: location,
       });

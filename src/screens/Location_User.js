@@ -17,14 +17,11 @@ export default function Location_User(props) {
     setMapLocation(region);
   };
   const onPressSend = () => {
-    if (props?.route?.params?.getLocation) {
-      props.navigation.navigate("Add_Teams", { pin });
-    }
-    if (props?.route?.params?.updateLocation) {
-      props.navigation.navigate("Update_Teams", { pin });
-    } else {
-      props.navigation.navigate("Report_Fire", { pin });
-    }
+    props.navigation.navigate("Report_Fire", {
+      pin,
+      organization: props?.route?.params?.organization,
+      type: props?.route?.params?.type,
+    });
   };
 
   return (

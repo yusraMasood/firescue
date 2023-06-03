@@ -5,14 +5,54 @@ import {
   TextInput,
   Button,
   StyleSheet,
-  Image,
-  StatusBar,
+  DeviceEventEmitter,
   TouchableOpacity,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
-import MapWindow from "./new_page";
+import { vh, vw } from "../Utils/dimensions";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Config";
+import MapWindow from "./MapWindow";
+import * as Notifications from "expo-notifications";
 
-export default function Report_Fire() {
-  const [Description, setDescription] = useState("");
+export default function Report_Fire(props) {
+  const [loading, setLoading] = useState(false);
+  const [Description, setDescription] = useState(
+    `${props?.route?.params?.type}-${props?.route?.params?.organization}`
+  );
+
+  const sendNotification = async () => {
+    try {
+      setLoading(true);
+      await addDoc(collection(db, "report"), {
+        description: Description,
+        location: props.route?.params?.pin,
+      });
+      setLoading(false);
+      DeviceEventEmitter.emit("event.test", {
+        description: Description,
+        location: props.route?.params?.pin,
+      });
+      ToastAndroid.show("Report send to admin", ToastAndroid.SHORT);
+      props.navigation.navigate("ManageOrganizations");
+
+      // props.navigation.goBack();
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      setLoading(false);
+      console.error("Error adding document: ", e);
+    }
+
+    // await Notifications.scheduleNotificationAsync({
+    //   content: {
+    //     title: "You've got mail! 📬",
+    //     body: "Here is the notification body",
+    //     data: { data: "goes here" },
+    //   },
+    //   trigger: { seconds: 2 },
+    // });
+  };
 
   return (
     <View style={styles.container_whole}>
@@ -23,7 +63,7 @@ export default function Report_Fire() {
         My Current Location
       </Text>
       <View style={styles.container}>
-        <MapWindow style={styles.map} />
+        <MapWindow location={props.route?.params?.pin} style={styles.map} />
       </View>
       <Text title="text" style={styles.description_text}>
         Describe the Incidence
@@ -34,16 +74,18 @@ export default function Report_Fire() {
           placeholder="Enter Description here."
           placeholderTextColor="#003f5c"
           onChangeText={(Description) => setDescription(Description)}
+          value={Description}
           multiline={true}
         />
       </View>
       <View>
-        <TouchableOpacity
-          //   onPress={sendNotificationWithPayload}
-          style={styles.Button}
-        >
-          <Text style={styles.Button_Text}>SEND REPORT</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size={20} color={"red"} />
+        ) : (
+          <TouchableOpacity onPress={sendNotification} style={styles.Button}>
+            <Text style={styles.Button_Text}>SEND REPORT</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -79,30 +121,33 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   TextInput: {
-    height: 50,
+    // height: 50,
     flex: 1,
-    paddingright: 0,
-    marginleft: 0,
-    padding: 0,
-    marginLeft: -80,
-    textAlign: "left",
-    flexDirection: "row",
-    display: "flex",
-    marginBottom: 90,
+    // paddingright: 0,
+    // marginleft: 0,
+    // padding: 0,
+    // marginLeft: -80,
+    // textAlign: "left",
+    // flexDirection: "row",
+    // display: "flex",
+    // marginBottom: 90,
+    paddingHorizontal: vw * 3,
+    borderColor: "black",
+    width: vw * 90,
+    borderWidth: 1,
   },
   inputView: {
-    backgroundColor: "white",
-    borderRadius: 0,
-    borderColor: "black",
-    width: InputLength,
-    borderWidth: 1,
-    height: 130,
-    marginBottom: 20,
-    alignItems: "center",
-    paddingHorizontal: 100,
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 100,
+    // backgroundColor: "white",
+    // borderRadius: 0,
+    // borderColor: "black",
+    // width: vw * 90,
+    // borderWidth: 1,
+    height: vh * 10,
+    // marginBottom: 20,
+    // alignItems: "center",
+    // paddingHorizontal: 100,
+    // alignItems: "center",
+    // flexDirection: "row",
   },
   imageStyle: {
     width: 200,

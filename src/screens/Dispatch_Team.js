@@ -14,7 +14,7 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 
 // const teams = [{ team: "Team A" }, { team: "Team B" }, { team: "Team C" }];
-import MapWindow from "./new_page";
+import MapWindow from "./MapWindow";
 import { db } from "../../Config";
 import { vh } from "../Utils/dimensions";
 import MapView from "react-native-maps";
