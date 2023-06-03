@@ -11,53 +11,32 @@ import {
   Modal,
   TouchableHighlight,
   Alert,
+  ToastAndroid,
 } from "react-native";
 import firebase from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-export default function Register_user({ navigation }) {
-  const [name, setname] = useState("");
-  const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("");
-  const [password, setPassword] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
+export default function Register_user(props) {
+  const [phone, setPhone] = useState("");
+  const auth = getAuth();
 
-  const emailRegex =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const passwordRegex =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
-
-  const validate = () => {
-    if (!emailRegex.test(email)) {
-      Alert.alert("OOPS!", "Invalid Email", [
-        { text: "Cancel", onPress: () => console.log("alert closed") },
-      ]);
-    } else if (!passwordRegex.test(password)) {
-      Alert.alert(
-        "OOPS!",
-        "Password must be at least 8 characters long and contain at least one letter and one number",
-        [{ text: "Cancel", onPress: () => console.log("alert closed") }]
+  const validate = async () => {
+    if (phone.trim() === "") {
+      return ToastAndroid.show(
+        "Please Enter Your Phone Number",
+        ToastAndroid.SHORT
       );
-    } else if (name === "") {
-      Alert.alert("Error", "Please enter your full name", [
-        { text: "Cancel", onPress: () => console.log("alert closed") },
-      ]);
-    } else if (location === "") {
-      Alert.alert("Error", "Please enter your location", [
-        { text: "Cancel", onPress: () => console.log("alert closed") },
-      ]);
-    } else if (!passwordRegex.test(ConfirmPassword)) {
-      Alert.alert("Error", "Please confirm your password", [
-        { text: "Cancel", onPress: () => console.log("alert closed") },
-      ]);
-
-      //   firebase.auth().createUserWithEmailAndPassword()
-    } else {
-      navigation.navigate("User_login");
     }
-  };
+    try {
+      setLoading(true);
+      await phone(auth, email, password);
+      setLoading(false);
 
-  const handleRegister = () => {
-    // Validate form values and register the user
+      props.navigation.navigate("Admin_login");
+    } catch (error) {
+      console.log("error", error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -73,55 +52,19 @@ export default function Register_user({ navigation }) {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Full Name"
+          placeholder="Phone Number"
+          keyboardType="number-pad"
           placeholderTextColor="#003f5c"
-          onChangeText={(name) => setname(name)}
+          onChangeText={(name) => setPhone(name)}
+          value={phone}
           multiline={true}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email Address"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
-          multiline={true}
-        />
-      </View>
-      {/* <View style={styles.inputView}>
-        <TextInput
-        style={styles.TextInput}
-        placeholder="Location"
-        placeholderTextColor="#003f5c"
-        onChangeText={(location) => setLocation(location)}
-        multiline={true}
-        /> 
-    </View>  */}
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Confirm Password"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(ConfirmPassword) =>
-            setConfirmPassword(ConfirmPassword)
-          }
         />
       </View>
 
       <TouchableOpacity>
         <Text
           style={styles.register_button}
-          onPress={() => navigation.navigate("User_login")}
+          onPress={() => props.navigation.navigate("User_login")}
         >
           Back to Login
         </Text>

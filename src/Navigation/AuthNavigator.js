@@ -13,8 +13,8 @@ const AuthNavigator = () => {
       <Stack.Screen name="MainPannel" component={MainPannel} />
       <Stack.Screen name="Admin_login" component={Admin_login} />
       <Stack.Screen name="User_login" component={User_login} />
-      <Stack.Screen name="Register_Admin" component={Register_Admin} />
-      <Stack.Screen name="Register_user" component={Register_user} />
+      {/* <Stack.Screen name="Register_Admin" component={Register_Admin} /> */}
+      {/* <Stack.Screen name="Register_user" component={Register_user} /> */}
     </Stack.Navigator>
   );
 };

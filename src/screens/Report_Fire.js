@@ -14,7 +14,6 @@ import { vh, vw } from "../Utils/dimensions";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../Config";
 import MapWindow from "./MapWindow";
-import * as Notifications from "expo-notifications";
 
 export default function Report_Fire(props) {
   const [loading, setLoading] = useState(false);
@@ -30,11 +29,13 @@ export default function Report_Fire(props) {
         location: props.route?.params?.pin,
       });
       setLoading(false);
-      DeviceEventEmitter.emit("event.test", {
-        description: Description,
-        location: props.route?.params?.pin,
-      });
-      ToastAndroid.show("Report send to admin", ToastAndroid.SHORT);
+
+      // schedulePushNotification();
+      // DeviceEventEmitter.emit("event.test", {
+      //   description: Description,
+      //   location: props.route?.params?.pin,
+      // });
+      // ToastAndroid.show("Report send to admin", ToastAndroid.SHORT);
       props.navigation.navigate("ManageOrganizations");
 
       // props.navigation.goBack();

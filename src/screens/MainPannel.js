@@ -21,7 +21,7 @@ export default function MainPannel(props) {
       </Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => props.navigation.navigate("AdminNavigator")}
+        onPress={() => props.navigation.navigate("Admin_login")}
       >
         <Text style={styles.text}>{title}</Text>
       </TouchableOpacity>
