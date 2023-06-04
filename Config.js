@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+importScripts("https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js");
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging.js"
+);
 export const firebaseConfig = {
   apiKey: "AIzaSyCtSizAvph6wCHNOKdY7SvTXwcXqcH2qfU",
   authDomain: "firescue-updated.firebaseapp.com",

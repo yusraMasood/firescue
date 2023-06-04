@@ -6,11 +6,12 @@ import AdminNavigator from "./AdminNavigator";
 import AuthNavigator from "./AuthNavigator";
 import UserNavigator from "./UserNavigator";
 import { getMessaging } from "firebase/messaging";
+// import firebase from "firebase/app";
+// import "firebase/messaging";
 
 const ParentNavigator = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  // const [token, setToken] = useState(null);
   const messaging = getMessaging();
   const auth = getAuth();
   const Stack = createNativeStackNavigator();
@@ -30,7 +31,7 @@ const ParentNavigator = (props) => {
       setUser(user?.email);
     });
 
-    getDeviceToken();
+    // getDeviceToken();
   }, []);
 
   return (

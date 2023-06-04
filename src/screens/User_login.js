@@ -32,7 +32,7 @@ const User_login = (props) => {
   const recaptchaVerifier = React.useRef(null);
 
   const getToken = async () => {
-    const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
+    const tokenvar = (await Notifications.getExpoPushTokenAsync()).data;
     setToken(tokenvar);
     console.log("tokenVar", tokenvar);
   };

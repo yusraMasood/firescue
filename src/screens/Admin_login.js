@@ -63,7 +63,7 @@ export default function Admin_login(props) {
       //   deviceId: Constants.deviceId,
       // });
       await signInWithEmailAndPassword(auth, email, password);
-      const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
+      const tokenvar = (await Notifications.getExpoPushTokenAsync()).data;
       await addDoc(collection(db, "user"), {
         email,
         password,
