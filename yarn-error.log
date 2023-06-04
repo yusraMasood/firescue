@@ -1,5 +1,5 @@
 Arguments: 
-  /opt/homebrew/Cellar/node/20.2.0/bin/node /opt/homebrew/Cellar/yarn/1.22.19/libexec/bin/yarn.js add expo-recaptcha
+  /opt/homebrew/Cellar/node/20.2.0/bin/node /opt/homebrew/Cellar/yarn/1.22.19/libexec/bin/yarn.js add patch-package
 
 PATH: 
   /Users/yusramasood/.asdf/shims:/opt/homebrew/opt/asdf/libexec/bin:/opt/homebrew/bin:/Users/yusramasood/.rbenv/shims:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/yusramasood/.rbenv/shims:/Users/yusramasood/Library/Android/sdk/emulator:/Users/yusramasood/Library/Android/sdk/platform-tools:/Users/yusramasood/.rvm/bin:/Users/yusramasood/npm:/Users/yusramasood/Library/Android/sdk/emulator:/Users/yusramasood/Library/Android/sdk/platform-tools:/Users/yusramasood/.rvm/bin:/Users/yusramasood/npm
@@ -14,17 +14,12 @@ Platform:
   darwin arm64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/expo-recaptcha: Not found
-      at params.callback [as _callback] (/opt/homebrew/Cellar/yarn/1.22.19/libexec/lib/cli.js:66145:18)
-      at self.callback (/opt/homebrew/Cellar/yarn/1.22.19/libexec/lib/cli.js:140890:22)
-      at Request.emit (node:events:511:28)
-      at Request.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.19/libexec/lib/cli.js:141862:10)
-      at Request.emit (node:events:511:28)
-      at IncomingMessage.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.19/libexec/lib/cli.js:141784:12)
-      at Object.onceWrapper (node:events:625:28)
-      at IncomingMessage.emit (node:events:523:35)
-      at endReadableNT (node:internal/streams/readable:1367:12)
-      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+  Error [ERR_SOCKET_CONNECTION_TIMEOUT]: Socket connection timeout
+      at new NodeError (node:internal/errors:399:5)
+      at internalConnectMultiple (node:net:1099:20)
+      at Timeout.internalConnectMultipleTimeout (node:net:1638:3)
+      at listOnTimeout (node:internal/timers:575:11)
+      at process.processTimers (node:internal/timers:514:7)
 
 npm manifest: 
   {
@@ -45,6 +40,7 @@ npm manifest:
       "@react-native-picker/picker": "^2.4.8",
       "@react-navigation/native": "^6.1.3",
       "@react-navigation/native-stack": "^6.9.9",
+      "deprecated-react-native-prop-types": "^4.1.0",
       "expo": "~47.0.8",
       "expo-device": "^5.2.1",
       "expo-firebase-recaptcha": "^2.3.1",
@@ -3105,6 +3101,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/@react-native/normalize-color/-/normalize-color-2.0.0.tgz"
     integrity sha512-Wip/xsc5lw8vsBlmY2MO/gFLp3MvuZ2baBZjDeTjjndMgM0h5sxz7AZR62RDPGgstp8Np7JzjvVqVT7tpFZqsw==
   
+  "@react-native/normalize-colors@*":
+    version "0.73.0"
+    resolved "https://registry.yarnpkg.com/@react-native/normalize-colors/-/normalize-colors-0.73.0.tgz#23e15cf2a2b73ac7e5e6df8d5b86b173cfb35a3f"
+    integrity sha512-EmSCmJ0djeMJadeFsms6Pl/R85i9xSJMc+tyJu/GEMkKXBVyYQyqanK4RHFU0v8MO90OWj+SiFXjCkKYiJ6mkg==
+  
   "@react-native/polyfills@2.0.0":
     version "2.0.0"
     resolved "https://registry.npmjs.org/@react-native/polyfills/-/polyfills-2.0.0.tgz"
@@ -4446,6 +4447,15 @@ Lockfile:
     integrity sha512-pWD0voFtNYxrVqvBMYf5gq3NA2GCpfodS1yNynTPc93AYA/KEMGeWDqqeUB6R2Z9ZofVhks2aeJXiuQqKNpesA==
     dependencies:
       "@react-native/normalize-color" "*"
+      invariant "*"
+      prop-types "*"
+  
+  deprecated-react-native-prop-types@^4.1.0:
+    version "4.1.0"
+    resolved "https://registry.yarnpkg.com/deprecated-react-native-prop-types/-/deprecated-react-native-prop-types-4.1.0.tgz#8ed03a64c21b7fbdd2d000957b6838d4f38d2c66"
+    integrity sha512-WfepZHmRbbdTvhcolb8aOKEvQdcmTMn5tKLbqbXmkBvjFjRVWAYqsXk/DBsV8TZxws8SdGHLuHaJrHSQUPRdfw==
+    dependencies:
+      "@react-native/normalize-colors" "*"
       invariant "*"
       prop-types "*"
   

@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function ManageOrganizations(props) {
   const organizationArray = ["School", "University", "Office", "Industry"];
+  const auth = getAuth();
   const renderOrganization = ({ item }) => {
     return (
       <TouchableOpacity
@@ -20,6 +22,25 @@ export default function ManageOrganizations(props) {
         }
       >
         <Text style={styles.text}>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
+  const handleLogout = async () => {
+    signOut(auth)
+      .then(() => {
+        // Handle successful logout
+        // props.navigation.navigate("AuthNavigator");
+      })
+      .catch((error) => {
+        return ToastAndroid.show("Please try again later", ToastAndroid.SHORT);
+        // Handle logout errors
+        // console.log("Logout error:", error);
+      });
+  };
+  const renderFooter = () => {
+    return (
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.text}>Logout</Text>
       </TouchableOpacity>
     );
   };
@@ -37,6 +58,7 @@ export default function ManageOrganizations(props) {
         keyExtractor={(item) => item}
         data={organizationArray}
         renderItem={renderOrganization}
+        ListFooterComponent={renderFooter}
       />
     </View>
   );

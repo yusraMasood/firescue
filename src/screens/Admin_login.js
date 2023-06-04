@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,20 +11,22 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Config";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   confirmPasswordReset,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
+import { getDatabase, ref, update } from "firebase/database";
+import * as Notifications from "expo-notifications";
 
 export default function Admin_login(props) {
-  const [name, setname] = useState("");
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("admin@gmail.com");
-  const [location, setlocation] = useState("");
-  const [OrganizationName, setOrganizationName] = useState("");
   const [password, setPassword] = useState("admin123");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const emailRegex =
@@ -32,9 +34,13 @@ export default function Admin_login(props) {
   const passwordRegex =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
   const auth = getAuth();
+  const database = getDatabase();
+
+  useEffect(() => {
+    // getToken();
+  }, []);
 
   const validate = async () => {
-    console.log("sjosjpo");
     if (email.trim() === "") {
       return ToastAndroid.show("Please Enter email", ToastAndroid.SHORT);
     }
@@ -49,7 +55,33 @@ export default function Admin_login(props) {
     }
     try {
       setLoading(true);
+      // const {
+      //   data: {
+      //     data: { expoPushToken },
+      //   },
+      // } = await axios.post("https://exp.host/--/api/v2/push/getExpoPushToken", {
+      //   deviceId: Constants.deviceId,
+      // });
       await signInWithEmailAndPassword(auth, email, password);
+      const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
+      await addDoc(collection(db, "user"), {
+        email,
+        password,
+        token: tokenvar,
+      });
+
+      onAuthStateChanged(auth, (user) => {
+        const userRef = ref(database, `user/${user?.uid}`);
+        update(userRef, { deviceToken: token })
+          .then((res) => {
+            console.log("res", res);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+        // return user?.uid;
+      });
+
       // props.navigation.navigate("AdminNavigator");
       setLoading(false);
     } catch (error) {

@@ -23,7 +23,7 @@ export default function AdminDashboard(props) {
     signOut(auth)
       .then(() => {
         // Handle successful logout
-        props.navigation.navigate("AuthNavigator");
+        // props.navigation.navigate("AuthNavigator");
       })
       .catch((error) => {
         return ToastAndroid.show("Please try again later", ToastAndroid.SHORT);

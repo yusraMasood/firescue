@@ -27,7 +27,7 @@ export default function Update_Teams(props) {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    const usersRef = collection(db, "users");
+    const usersRef = collection(db, "teams");
     if (teamLeader.trim() === "") {
       return ToastAndroid.show(
         "Please Enter Team Leader Name",

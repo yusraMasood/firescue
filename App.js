@@ -2,28 +2,24 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import ParentNavigator from "./src/Navigation/ParentNavigator";
-// import messaging from "firebase/messaging";
+import { registerForPushNotificationsAsync } from "./src/Utils/HelperFunction";
+
+// import { Notifications } from "expo";
+// import { registerForPushNotificationsAsync } from "./src/Utils/HelperFunction";
 
 export default function App() {
   useEffect(() => {
-    // const requestPermission = async () => {
-    //   try {
-    //     const { status } = await messaging().requestPermission();
-    //     if (status === "granted") {
-    //       const token = await messaging().getToken();
-    //       console.log("FCM Token:", token);
-    //     } else {
-    //       console.log("Permission denied");
-    //     }
-    //   } catch (error) {
-    //     console.log("Permission rejected:", error);
+    registerForPushNotificationsAsync();
+    // registerForPushNotificationsAsync();
+    // const notificationListener = Notifications.addNotificationReceivedListener(
+    //   (notification) => {
+    //     console.log("Received notification:", notification);
+    //     // Handle the incoming notification here
     //   }
+    // );
+    // return () => {
+    //   Notifications.removeNotificationSubscription(notificationListener);
     // };
-    // requestPermission();
-    // return messaging().onTokenRefresh((token) => {
-    //   console.log("FCM Token (refreshed):", token);
-    //   // Update the token in your backend database if necessary
-    // });
   }, []);
   return (
     <NavigationContainer>

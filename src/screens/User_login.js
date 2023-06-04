@@ -6,24 +6,39 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
+import * as Notifications from "expo-notifications";
 import {
   getAuth,
   signInWithPhoneNumber,
   PhoneAuthProvider,
   signInWithCredential,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { firebaseConfig } from "../../Config";
+import { db, firebaseConfig } from "../../Config";
+import { getDatabase, ref, update } from "firebase/database";
+import { addDoc, collection } from "firebase/firestore";
 
 const User_login = (props) => {
-  const [phoneNumber, setPhoneNumber] = useState("03032900445");
+  const [phoneNumber, setPhoneNumber] = useState("+923032900445");
   const [verificationId, setVerificationId] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+  const [token, setToken] = useState(null);
+  const database = getDatabase();
 
   const auth = getAuth();
   const recaptchaVerifier = React.useRef(null);
+
+  const getToken = async () => {
+    const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
+    setToken(tokenvar);
+    console.log("tokenVar", tokenvar);
+  };
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const SendVerification = async () => {
     try {
@@ -32,7 +47,7 @@ const User_login = (props) => {
         phoneNumber,
         recaptchaVerifier.current
       );
-      console.log("phoneProvider", phoneProvider);
+      // console.log("phoneProvider", phoneProvider);
       setVerificationId((await phoneProvider).verificationId);
     } catch (error) {
       console.error("Error sending OTP", error);
@@ -46,7 +61,12 @@ const User_login = (props) => {
         verificationCode
       );
       const userCredential = await signInWithCredential(auth, credential);
-      // User signed in successfully
+      const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
+
+      await addDoc(collection(db, "user"), {
+        phoneNumber,
+        token: tokenvar,
+      });
       console.log("User signed in", userCredential.user);
     } catch (error) {
       // Handle error

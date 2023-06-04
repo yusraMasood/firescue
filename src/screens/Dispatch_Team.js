@@ -30,7 +30,7 @@ const Dispatch_Team = (props) => {
   const getTeams = async () => {
     setLoading(true);
 
-    const querySnapshot = await getDocs(collection(db, "users"));
+    const querySnapshot = await getDocs(collection(db, "teams"));
     const tempArray = [];
     querySnapshot.forEach((doc) => {
       //   console.log("dhoidh", doc.data.toString);

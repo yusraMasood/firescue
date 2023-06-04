@@ -19,7 +19,7 @@ export default function Show_Teams(props) {
   const [loading, setLoading] = useState(false);
   const getTeams = async () => {
     setLoading(true);
-    const querySnapshot = await getDocs(collection(db, "users"));
+    const querySnapshot = await getDocs(collection(db, "teams"));
     const tempArray = [];
     querySnapshot.forEach((doc) => {
       //   console.log("dhoidh", doc.data.toString);
@@ -40,7 +40,7 @@ export default function Show_Teams(props) {
     return unsubscribe;
   }, []);
   const onPressDelete = async (id) => {
-    await deleteDoc(doc(db, "users", id));
+    await deleteDoc(doc(db, "teams", id));
     getTeams();
   };
   const renderTeams = ({ item }) => {

@@ -3,56 +3,56 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
-  DeviceEventEmitter,
   TouchableOpacity,
-  ToastAndroid,
   ActivityIndicator,
 } from "react-native";
 import { vh, vw } from "../Utils/dimensions";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import * as Notifications from "expo-notifications";
 import { db } from "../../Config";
 import MapWindow from "./MapWindow";
+import { sendNotification } from "../Utils/HelperFunction";
+import { getAuth } from "firebase/auth";
 
 export default function Report_Fire(props) {
   const [loading, setLoading] = useState(false);
   const [Description, setDescription] = useState(
     `${props?.route?.params?.type}-${props?.route?.params?.organization}`
   );
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
-  const sendNotification = async () => {
+  const addReportFire = async () => {
     try {
       setLoading(true);
+      const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
       await addDoc(collection(db, "report"), {
         description: Description,
         location: props.route?.params?.pin,
+        token: tokenvar,
       });
+
+      const data = {
+        description: Description,
+        location: props.route?.params?.pin,
+      };
+      const querySnapshot = await getDocs(collection(db, "user"));
+      // const tempArray = [];
+      let admin;
+      querySnapshot.forEach((doc) => {
+        if (doc?.data()?.email === "admin@gmail.com") {
+          admin = doc?.data()?.token;
+        }
+      });
+
+      sendNotification(admin, data);
       setLoading(false);
-
-      // schedulePushNotification();
-      // DeviceEventEmitter.emit("event.test", {
-      //   description: Description,
-      //   location: props.route?.params?.pin,
-      // });
-      // ToastAndroid.show("Report send to admin", ToastAndroid.SHORT);
       props.navigation.navigate("ManageOrganizations");
-
-      // props.navigation.goBack();
-      // console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       setLoading(false);
       console.error("Error adding document: ", e);
     }
-
-    // await Notifications.scheduleNotificationAsync({
-    //   content: {
-    //     title: "You've got mail! 📬",
-    //     body: "Here is the notification body",
-    //     data: { data: "goes here" },
-    //   },
-    //   trigger: { seconds: 2 },
-    // });
   };
 
   return (
@@ -83,7 +83,7 @@ export default function Report_Fire(props) {
         {loading ? (
           <ActivityIndicator size={20} color={"red"} />
         ) : (
-          <TouchableOpacity onPress={sendNotification} style={styles.Button}>
+          <TouchableOpacity onPress={addReportFire} style={styles.Button}>
             <Text style={styles.Button_Text}>SEND REPORT</Text>
           </TouchableOpacity>
         )}

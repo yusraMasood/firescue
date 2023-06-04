@@ -36,7 +36,7 @@ export default function Add_Teams(props) {
 
     try {
       setLoading(true);
-      await addDoc(collection(db, "users"), {
+      await addDoc(collection(db, "teams"), {
         name: teamLeader,
         location: location,
       });
