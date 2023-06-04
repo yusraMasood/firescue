@@ -5,48 +5,32 @@ import { DeviceEventEmitter } from "react-native";
 import AdminNavigator from "./AdminNavigator";
 import AuthNavigator from "./AuthNavigator";
 import UserNavigator from "./UserNavigator";
-import * as Notifications from "expo-notifications";
+import { getMessaging } from "firebase/messaging";
 
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: false,
-//     shouldSetBadge: false,
-//   }),
-// });
-
-const ParentNavigator = () => {
+const ParentNavigator = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   // const [token, setToken] = useState(null);
+  const messaging = getMessaging();
   const auth = getAuth();
   const Stack = createNativeStackNavigator();
-  const currentUser = auth.currentUser;
-  // console.log("currentUser", currentUser?.displayName);
-  const getToken = async () => {
-    const tokenvar = (await Notifications.getDevicePushTokenAsync()).data;
-    // setToken(tokenvar);
-    console.log("tokenVar", tokenvar);
-
+  const getDeviceToken = async () => {
     try {
-      await updateProfile(currentUser, {
-        displayName: tokenvar,
-      });
-      console.log("User profile updated successfully");
+      await messaging.requestPermission();
+      const token = await messaging.getToken();
+      console.log("Device Token:", token);
     } catch (error) {
-      console.error("Error updating user profile:", error);
+      console.log("Error:", error);
     }
   };
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       console.log("user", "user", user);
-      // if (currentUser) {
-      //   getToken();
-      // }
       setIsLoggedIn(!!user);
       setUser(user?.email);
     });
+
+    getDeviceToken();
   }, []);
 
   return (
